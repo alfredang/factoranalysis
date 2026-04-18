@@ -236,6 +236,9 @@ requires-dist = [
     { name = "streamlit", specifier = ">=1.56.0" },
 ]
 
+[package.metadata.requires-dev]
+dev = []
+
 [[package]]
 name = "fonttools"
 version = "4.62.1"

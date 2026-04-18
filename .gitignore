@@ -9,6 +9,13 @@ wheels/
 # Virtual environments
 .venv
 
-# Screenshots and playwright artifacts
-*.png
+# Playwright artifacts
 .playwright-mcp/
+
+# Temp screenshots (keep screenshot.png for README)
+v2-*.png
+v3-*.png
+charts.png
+demo-loaded.png
+initial-load.png
+results.png

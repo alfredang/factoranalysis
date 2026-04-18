@@ -16,8 +16,7 @@
 
 ## Screenshot
 
-<!-- Add a screenshot of your app here -->
-<!-- ![Screenshot](screenshot.png) -->
+![Screenshot](screenshot.png)
 
 ## About
 
