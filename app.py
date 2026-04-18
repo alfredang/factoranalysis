@@ -319,3 +319,13 @@ if "results" in st.session_state:
     # --- Correlation Matrix ---
     with st.expander("Correlation Matrix"):
         st.dataframe(results["corr_matrix"].round(3), use_container_width=True)
+
+# --- Footer ---
+st.markdown("---")
+st.markdown(
+    '<div style="text-align: center; color: #888; padding: 1rem 0;">'
+    'Powered by <a href="https://www.tertiarycourses.com.sg/" target="_blank" '
+    'style="color: #FF4B4B; text-decoration: none;">Tertiary Infotech Academy Pte Ltd</a>'
+    '</div>',
+    unsafe_allow_html=True,
+)
