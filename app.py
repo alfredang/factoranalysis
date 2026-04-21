@@ -53,36 +53,25 @@ DANGER = "#f43f5e"       # rose-500
 CHART_COLORS = ["#2dd4bf", "#818cf8", "#fb923c", "#f472b6", "#a3e635", "#38bdf8", "#e879f9", "#fbbf24"]
 
 
-# --- Theme ---
-def get_theme():
-    if "theme" not in st.session_state:
-        st.session_state["theme"] = "Dark"
-    return st.session_state["theme"]
+# --- Theme (dark only) ---
+plt.rcParams.update({
+    "figure.facecolor": BG_CARD,
+    "axes.facecolor": BG_CARD,
+    "axes.edgecolor": BG_SURFACE,
+    "axes.labelcolor": TEXT_PRIMARY,
+    "text.color": TEXT_PRIMARY,
+    "xtick.color": TEXT_MUTED,
+    "ytick.color": TEXT_MUTED,
+    "grid.color": BG_SURFACE,
+    "grid.alpha": 0.4,
+    "legend.facecolor": BG_CARD,
+    "legend.edgecolor": BG_SURFACE,
+    "font.family": "sans-serif",
+})
 
 
-def apply_theme(theme):
-    if theme == "Dark":
-        plt.rcParams.update({
-            "figure.facecolor": BG_CARD,
-            "axes.facecolor": BG_CARD,
-            "axes.edgecolor": BG_SURFACE,
-            "axes.labelcolor": TEXT_PRIMARY,
-            "text.color": TEXT_PRIMARY,
-            "xtick.color": TEXT_MUTED,
-            "ytick.color": TEXT_MUTED,
-            "grid.color": BG_SURFACE,
-            "grid.alpha": 0.4,
-            "legend.facecolor": BG_CARD,
-            "legend.edgecolor": BG_SURFACE,
-            "font.family": "sans-serif",
-        })
-    else:
-        plt.rcParams.update(plt.rcParamsDefault)
-
-
-def inject_css(theme):
-    if theme == "Dark":
-        st.markdown(f"""
+def inject_css():
+    st.markdown(f"""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -408,14 +397,6 @@ def inject_css(theme):
             }}
         </style>
         """, unsafe_allow_html=True)
-    else:
-        st.markdown("""
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
-            .stApp { font-family: 'DM Sans', sans-serif; }
-            h1, h2, h3, h4, h5, h6 { font-family: 'DM Sans', sans-serif !important; font-weight: 700 !important; letter-spacing: -0.02em; }
-        </style>
-        """, unsafe_allow_html=True)
 
 
 def prettify(col_name):
@@ -432,54 +413,25 @@ def prettify_map(columns):
     return mapping
 
 
-def get_chart_colors(theme):
-    if theme == "Dark":
-        return {
-            "line": ACCENT,
-            "fill": ACCENT,
-            "fill_alpha": 0.15,
-            "marker": ACCENT,
-            "grid": BG_SURFACE,
-            "text": TEXT_PRIMARY,
-            "muted": TEXT_MUTED,
-            "bar_colors": CHART_COLORS,
-            "scatter": ACCENT,
-            "scatter_alpha": 0.5,
-            "heatmap_cmap": LinearSegmentedColormap.from_list("custom", [BG_CARD, ACCENT_DIM, DANGER]),
-        }
-    else:
-        return {
-            "line": "#0d9488",
-            "fill": "#0d9488",
-            "fill_alpha": 0.1,
-            "marker": "#0d9488",
-            "grid": "#e2e8f0",
-            "text": "#1e293b",
-            "muted": "#64748b",
-            "bar_colors": ["#0d9488", "#6366f1", "#ea580c", "#db2777", "#65a30d", "#0284c7", "#c026d3", "#d97706"],
-            "scatter": "#0d9488",
-            "scatter_alpha": 0.4,
-            "heatmap_cmap": LinearSegmentedColormap.from_list("custom", ["#f8fafc", "#99f6e4", "#f43f5e"]),
-        }
+CHART_STYLE = {
+    "line": ACCENT,
+    "fill": ACCENT,
+    "fill_alpha": 0.15,
+    "marker": ACCENT,
+    "grid": BG_SURFACE,
+    "text": TEXT_PRIMARY,
+    "muted": TEXT_MUTED,
+    "bar_colors": CHART_COLORS,
+    "scatter": ACCENT,
+    "scatter_alpha": 0.5,
+    "heatmap_cmap": LinearSegmentedColormap.from_list("custom", [BG_CARD, ACCENT_DIM, DANGER]),
+}
 
+
+# --- Apply theme ---
+inject_css()
 
 # --- Sidebar ---
-st.sidebar.header("Settings")
-
-prev_theme = get_theme()
-if st.sidebar.toggle("Dark Mode", value=(prev_theme == "Dark")):
-    st.session_state["theme"] = "Dark"
-else:
-    st.session_state["theme"] = "Light"
-
-theme = get_theme()
-apply_theme(theme)
-inject_css(theme)
-
-if theme != prev_theme:
-    st.rerun()
-
-st.sidebar.markdown("---")
 st.sidebar.header("Data Source")
 data_source = st.sidebar.radio("Choose data source:", ["Upload a file", "Use demo dataset"])
 
@@ -645,7 +597,7 @@ if "results" in st.session_state:
     var_explained = results["var_explained"]
     cumulative_var = results["cumulative_var"]
     eigenvalues = results["eigenvalues"]
-    colors = get_chart_colors(theme)
+    colors = CHART_STYLE
 
     st.markdown(
         '<div class="results-badge">\u2705 Factor Analysis completed!</div>',
@@ -711,9 +663,9 @@ if "results" in st.session_state:
         for i_row in range(len(corr_data)):
             for j_col in range(len(corr_data)):
                 val = corr_data.values[i_row, j_col]
-                text_color = TEXT_PRIMARY if theme == "Dark" else "#1e293b"
+                text_color = TEXT_PRIMARY
                 if abs(val) > 0.6:
-                    text_color = "#ffffff" if theme == "Dark" else "#ffffff"
+                    text_color = "#ffffff"
                 ax_corr.text(j_col, i_row, f"{val:.2f}", ha="center", va="center",
                              fontsize=8, color=text_color, fontweight="bold" if abs(val) >= 0.4 else "normal")
         ax_corr.set_title("Correlation Matrix", fontsize=14, fontweight="bold", pad=16)
@@ -755,7 +707,7 @@ if "results" in st.session_state:
                               color=colors["fill"], zorder=2)
         ax_scree.plot(x_factors, var_explained, color=colors["line"], linewidth=2.5,
                       marker="o", markersize=10, markerfacecolor=colors["marker"],
-                      markeredgecolor="white" if theme == "Dark" else colors["line"],
+                      markeredgecolor="white",
                       markeredgewidth=2, zorder=3)
         for i_pt, (xv, yv) in enumerate(zip(x_factors, var_explained)):
             ax_scree.annotate(f"{yv:.1f}%", (xv, yv), textcoords="offset points",
