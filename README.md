@@ -29,8 +29,8 @@ Factor Analysis Tool is a Streamlit-based web application that allows users to u
 - **Varimax Rotation** — Orthogonal rotation for clearer, more interpretable factor loadings
 - **Auto-Labeled Factors** — Factors are automatically named by their top two loading variables
 - **Comprehensive Output** — Variance explained, communalities, correlation matrix, and factor scores
-- **Visual Analytics** — Factor loadings bar chart and factor scores scatter plot
-- **Dark / Light Theme** — Toggle between themes with matching chart styling
+- **Visual Analytics** — Tabbed visualizations: correlation matrix heatmap, factor loadings bar chart, scree plot, and factor scores scatter plot
+- **Dark Theme** — Polished dark UI with teal accents and custom-styled charts
 
 ## Tech Stack
 
